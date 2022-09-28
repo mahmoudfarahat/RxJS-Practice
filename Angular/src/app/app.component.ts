@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { concat, delay, fromEvent, interval, map, mergeMap, of, switchMap, tap } from 'rxjs';
+import { concat, concatMap, delay, fromEvent, interval, map, merge, mergeMap, of, switchMap, take, tap } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +12,12 @@ export class AppComponent implements OnInit{
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
-
+    
+    const clicks = fromEvent(document, 'click');
+    const result = clicks.pipe(
+      concatMap(ev => interval(1000).pipe(take(4)))
+    );
+    result.subscribe(x => console.log(x));
 //3-swichMap 
 // const click =fromEvent(document,'click')
 // click.pipe(
@@ -25,7 +30,13 @@ export class AppComponent implements OnInit{
 // })
 
 
-  //2- megre Map , flatMap
+const series1$ = interval(1000).pipe(map(val => val*10));
+
+const series2$ = interval(1000).pipe(map(val => val*100));
+
+const result$ = merge(series1$, series2$);
+
+result$.subscribe(console.log);
 // const letters$ = of ('a','c','b')
 // const numbers$ = of (1,2,3)
 
